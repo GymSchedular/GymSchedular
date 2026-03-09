@@ -55,6 +55,14 @@
   .main-content {
     padding: var(--space-4);
     margin-left: 0 !important;
+  /* Landing page grids: features, classes, testimonials, pricing */
+  .features-grid,
+  .classes-preview-grid,
+  .testimonials-grid,
+  .pricing-grid {
+    grid-template-columns: 1fr;
+    gap: var(--space-4);
+  }
   }
 
   .stats-grid {
