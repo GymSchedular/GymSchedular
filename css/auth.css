@@ -1,0 +1,237 @@
+/* ========================================
+   GymSchedular - Auth Pages (Login/Signup)
+   ======================================== */
+
+.auth-page {
+  min-height: 100vh;
+  display: flex;
+}
+
+.auth-left {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: var(--space-8);
+  background: linear-gradient(135deg, #4a1942 0%, #82244d 50%, #a0345a 100%);
+  position: relative;
+  overflow: hidden;
+}
+
+.auth-left::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: url('https://images.unsplash.com/photo-1534438327276-14e5300c3a48?w=1200&q=80') center/cover no-repeat;
+  opacity: 0.15;
+  mix-blend-mode: overlay;
+}
+
+.auth-left-content {
+  position: relative;
+  text-align: center;
+  color: #ffffff;
+  max-width: 400px;
+}
+
+.auth-left-logo {
+  width: 64px;
+  height: 64px;
+  border-radius: var(--radius-xl);
+  background: rgba(220, 53, 69, 0.3);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto var(--space-6);
+}
+
+.auth-left-logo svg {
+  width: 36px;
+  height: 36px;
+  color: var(--brand-primary);
+}
+
+.auth-left h1 {
+  font-size: var(--font-size-3xl);
+  font-weight: 700;
+  margin-bottom: var(--space-4);
+  line-height: 1.2;
+}
+
+.auth-left h1 span {
+  color: var(--brand-primary);
+}
+
+.auth-left p {
+  font-size: var(--font-size-base);
+  color: rgba(255, 255, 255, 0.7);
+  line-height: 1.6;
+}
+
+.auth-features {
+  display: flex;
+  justify-content: center;
+  gap: var(--space-6);
+  margin-top: var(--space-8);
+}
+
+.auth-feature {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-2);
+}
+
+.auth-feature-icon {
+  width: 44px;
+  height: 44px;
+  border-radius: var(--radius-lg);
+  background: rgba(255, 255, 255, 0.1);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.auth-feature-icon svg {
+  width: 22px;
+  height: 22px;
+  color: #ffffff;
+}
+
+.auth-feature span {
+  font-size: var(--font-size-xs);
+  color: rgba(255, 255, 255, 0.7);
+}
+
+.auth-right {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: var(--space-8);
+  background: var(--bg-primary);
+}
+
+.auth-form-container {
+  width: 100%;
+  max-width: 420px;
+}
+
+.auth-form-header {
+  margin-bottom: var(--space-8);
+}
+
+.auth-form-header h2 {
+  font-size: var(--font-size-2xl);
+  font-weight: 700;
+  margin-bottom: var(--space-2);
+}
+
+.auth-form-header p {
+  color: var(--text-secondary);
+  font-size: var(--font-size-base);
+}
+
+.auth-form-header a {
+  color: var(--brand-primary);
+  font-weight: 500;
+}
+
+.auth-form-header a:hover {
+  text-decoration: underline;
+}
+
+.auth-form {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-5);
+}
+
+.auth-form .form-group {
+  gap: var(--space-2);
+}
+
+.auth-form .form-label {
+  font-size: var(--font-size-sm);
+  font-weight: 500;
+}
+
+.auth-divider {
+  display: flex;
+  align-items: center;
+  gap: var(--space-4);
+  margin: var(--space-4) 0;
+}
+
+.auth-divider::before,
+.auth-divider::after {
+  content: '';
+  flex: 1;
+  height: 1px;
+  background: var(--border-color);
+}
+
+.auth-divider span {
+  font-size: var(--font-size-sm);
+  color: var(--text-tertiary);
+}
+
+.auth-remember {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.auth-remember a {
+  font-size: var(--font-size-sm);
+  color: var(--brand-primary);
+}
+
+.auth-remember a:hover {
+  text-decoration: underline;
+}
+
+.auth-footer {
+  text-align: center;
+  margin-top: var(--space-6);
+  font-size: var(--font-size-sm);
+  color: var(--text-secondary);
+}
+
+.auth-footer a {
+  color: var(--brand-primary);
+  font-weight: 500;
+}
+
+.auth-footer a:hover {
+  text-decoration: underline;
+}
+
+.auth-phone-inputs {
+  display: flex;
+  gap: var(--space-2);
+}
+
+.auth-phone-inputs .form-select {
+  width: 100px;
+  flex-shrink: 0;
+}
+
+/* Responsive Auth */
+@media (max-width: 968px) {
+  .auth-left {
+    display: none;
+  }
+  .auth-right {
+    flex: 1;
+  }
+}
+
+@media (max-width: 480px) {
+  .auth-right {
+    padding: var(--space-5);
+  }
+  .auth-form-header h2 {
+    font-size: var(--font-size-xl);
+  }
+}

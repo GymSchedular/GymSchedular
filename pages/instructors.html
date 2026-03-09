@@ -1,0 +1,295 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>GymSchedular - Instructors</title>
+  <link rel="stylesheet" href="../css/variables.css">
+  <link rel="stylesheet" href="../css/base.css">
+  <link rel="stylesheet" href="../css/components.css">
+  <link rel="stylesheet" href="../css/sidebar.css">
+  <link rel="stylesheet" href="../css/instructors.css">
+  <link rel="stylesheet" href="../css/responsive.css">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%23dc3545'><path d='M20.57 14.86L22 13.43 20.57 12 17 15.57 8.43 7 12 3.43 10.57 2 9.14 3.43 7.71 2 5.57 4.14 4.14 2.71 2.71 4.14l1.43 1.43L2 7.71l1.43 1.43L2 10.57 3.43 12 7 8.43 15.57 17 12 20.57 13.43 22l1.43-1.43L16.29 22l2.14-2.14 1.43 1.43 1.43-1.43-1.43-1.43L22 16.29z'/></svg>">
+</head>
+<body>
+  <div class="app-layout" id="app">
+    <main class="main-content" id="mainContent"></main>
+  </div>
+
+  <script src="../js/utils/storage.js"></script>
+  <script src="../js/utils/theme.js"></script>
+  <script src="../js/utils/icons.js"></script>
+  <script src="../js/utils/data.js"></script>
+  <script src="../js/components/sidebar.js"></script>
+  <script src="../js/components/toast.js"></script>
+
+  <script>
+    if (!UserManager.isLoggedIn()) {
+      window.location.href = 'login.html';
+    }
+
+    let activeSpecialty = 'all';
+    let searchQuery = '';
+
+    function filterInstructors() {
+      let filtered = AppData.instructors;
+
+      if (activeSpecialty !== 'all') {
+        filtered = filtered.filter(inst => 
+          inst.specialties.some(s => s.toLowerCase() === activeSpecialty.toLowerCase())
+        );
+      }
+
+      if (searchQuery) {
+        const q = searchQuery.toLowerCase();
+        filtered = filtered.filter(inst => 
+          inst.name.toLowerCase().includes(q) ||
+          inst.specialties.some(s => s.toLowerCase().includes(q)) ||
+          inst.bio.toLowerCase().includes(q)
+        );
+      }
+
+      return filtered;
+    }
+
+    function renderInstructorCards() {
+      const grid = document.getElementById('instructorsGrid');
+      const filtered = filterInstructors();
+
+      grid.innerHTML = filtered.map((inst, i) => `
+        <div class="instructor-card animate-slide-up" style="animation-delay:${0.08 * (i + 1)}s">
+          <div class="instructor-card-image">
+            <img src="${inst.image}" alt="${inst.name}" loading="lazy">
+          </div>
+          <div class="instructor-card-content">
+            <div class="instructor-card-header">
+              <div>
+                <h3>${inst.name}</h3>
+                <p class="instructor-specialty">${inst.specialties.join(' & ')}</p>
+              </div>
+              <div class="instructor-rating">
+                ${Icons.star}
+                <span>${inst.rating}</span>
+                <span class="rating-count">(${inst.reviews})</span>
+              </div>
+            </div>
+            <p class="instructor-bio">${inst.bio}</p>
+            <div class="instructor-stats-row">
+              <div class="instructor-stat">
+                <strong>${inst.experience}</strong>
+                <span>Experience</span>
+              </div>
+              <div class="instructor-stat">
+                <strong>${inst.classes}</strong>
+                <span>Classes Taught</span>
+              </div>
+              <div class="instructor-stat">
+                <strong>${inst.reviews}+</strong>
+                <span>Reviews</span>
+              </div>
+            </div>
+            <div class="instructor-certs">
+              ${inst.certifications.map(cert => `
+                <span class="cert-badge">${Icons.award} ${cert}</span>
+              `).join('')}
+            </div>
+
+            <!-- Reviews Section -->
+            <div class="instructor-reviews-section" id="reviews-${inst.id}">
+              <div class="reviews-header" onclick="toggleReviews(${inst.id})">
+                <span>${Icons.star} Member Reviews (${inst.reviews})</span>
+                <svg class="reviews-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="16" height="16"><polyline points="6 9 12 15 18 9"/></svg>
+              </div>
+              <div class="reviews-body" id="reviews-body-${inst.id}" style="display:none;">
+                ${getInstructorReviews(inst).map(r => `
+                  <div class="review-item">
+                    <div class="review-item-header">
+                      <strong>${r.name}</strong>
+                      <span class="review-stars">${'★'.repeat(r.stars)}${'☆'.repeat(5 - r.stars)}</span>
+                    </div>
+                    <p class="review-text">${r.text}</p>
+                    <span class="review-date">${r.date}</span>
+                  </div>
+                `).join('')}
+              </div>
+            </div>
+
+            <div class="instructor-card-actions">
+              <button class="btn btn-primary btn-sm" onclick="window.location.href='schedule.html'">View Schedule</button>
+              <button class="btn btn-outline btn-sm" onclick="openChat(${inst.id}, '${inst.name}')">${Icons.messageSquare} Chat</button>
+              <button class="btn btn-outline btn-sm" onclick="toggleReviews(${inst.id})">${Icons.star} Reviews</button>
+            </div>
+          </div>
+        </div>
+      `).join('');
+
+      if (filtered.length === 0) {
+        grid.innerHTML = `
+          <div class="empty-state">
+            <div class="empty-icon">${Icons.users}</div>
+            <h3>No instructors found</h3>
+            <p>Try adjusting your search or filters</p>
+          </div>
+        `;
+      }
+    }
+
+    function setSpecialty(specialty, btn) {
+      activeSpecialty = specialty;
+      document.querySelectorAll('.filter-chip').forEach(c => c.classList.remove('active'));
+      btn.classList.add('active');
+      renderInstructorCards();
+    }
+
+    function handleSearch(value) {
+      searchQuery = value;
+      renderInstructorCards();
+    }
+
+    // Review data for each instructor
+    function getInstructorReviews(inst) {
+      const reviewPool = {
+        1: [
+          { name: 'Jessica L.', stars: 5, text: 'Sarah\'s yoga classes are transformative. Her cues are clear and she adjusts for every level.', date: 'Feb 2026' },
+          { name: 'Michael R.', stars: 5, text: 'Best yoga instructor I\'ve ever had. The flow is always creative and challenging.', date: 'Jan 2026' },
+          { name: 'Amy K.', stars: 4, text: 'Great energy and guidance. Sometimes classes fill up fast though!', date: 'Dec 2025' }
+        ],
+        2: [
+          { name: 'David W.', stars: 5, text: 'Marcus pushes you hard but makes it fun. Lost 15 lbs in 2 months with his HIIT classes.', date: 'Feb 2026' },
+          { name: 'Tina S.', stars: 5, text: 'Incredibly motivating coach. Every session is different and intense.', date: 'Jan 2026' },
+          { name: 'Chris P.', stars: 4, text: 'Tough workouts but worth every drop of sweat. Highly recommend.', date: 'Dec 2025' }
+        ],
+        3: [
+          { name: 'Rachel M.', stars: 5, text: 'Emma really knows her stuff. My deadlift form improved dramatically under her coaching.', date: 'Feb 2026' },
+          { name: 'Tom B.', stars: 4, text: 'Excellent at explaining proper form. Patient with beginners.', date: 'Jan 2026' },
+          { name: 'Nina V.', stars: 5, text: 'Her Pilates sessions are amazing too. Very versatile instructor!', date: 'Dec 2025' }
+        ],
+        4: [
+          { name: 'Alex H.', stars: 5, text: 'Jake made me fall in love with boxing. Technique-focused and no ego in his classes.', date: 'Feb 2026' },
+          { name: 'Sam J.', stars: 5, text: 'Incredible coach with real fight experience. You can tell the difference.', date: 'Jan 2026' },
+          { name: 'Laura T.', stars: 4, text: 'Great fundamentals class for beginners. Felt safe and supported.', date: 'Dec 2025' }
+        ]
+      };
+      return reviewPool[inst.id] || [];
+    }
+
+    function toggleReviews(instId) {
+      const body = document.getElementById('reviews-body-' + instId);
+      const section = document.getElementById('reviews-' + instId);
+      if (body.style.display === 'none') {
+        body.style.display = 'block';
+        section.classList.add('open');
+      } else {
+        body.style.display = 'none';
+        section.classList.remove('open');
+      }
+    }
+
+    // Chat modal for instructors
+    function openChat(instId, instName) {
+      // Remove existing modal if any
+      const existing = document.getElementById('instructorChatModal');
+      if (existing) existing.remove();
+
+      const modal = document.createElement('div');
+      modal.id = 'instructorChatModal';
+      modal.className = 'instructor-chat-overlay';
+      modal.innerHTML = `
+        <div class="instructor-chat-modal">
+          <div class="instructor-chat-header">
+            <h4>${Icons.messageSquare} Chat with ${instName}</h4>
+            <button class="instructor-chat-close" onclick="closeChat()">&times;</button>
+          </div>
+          <div class="instructor-chat-body" id="chatMessages">
+            <div class="chat-msg chat-msg-system">Start a conversation with ${instName}. Ask about classes, schedule, or training tips!</div>
+          </div>
+          <div class="instructor-chat-input">
+            <input type="text" id="chatInput" placeholder="Type a message..." onkeydown="if(event.key==='Enter')sendChatMsg(${instId},'${instName}')">
+            <button class="btn btn-primary btn-sm" onclick="sendChatMsg(${instId},'${instName}')">Send</button>
+          </div>
+        </div>
+      `;
+      document.body.appendChild(modal);
+      document.getElementById('chatInput').focus();
+    }
+
+    function closeChat() {
+      const modal = document.getElementById('instructorChatModal');
+      if (modal) modal.remove();
+    }
+
+    function sendChatMsg(instId, instName) {
+      const input = document.getElementById('chatInput');
+      const msg = input.value.trim();
+      if (!msg) return;
+
+      const body = document.getElementById('chatMessages');
+      body.innerHTML += '<div class="chat-msg chat-msg-user">' + msg.replace(/</g, '&lt;').replace(/>/g, '&gt;') + '</div>';
+      input.value = '';
+
+      // Simulate reply
+      setTimeout(() => {
+        const replies = [
+          "Thanks for reaching out! I'd love to help you with that.",
+          "Great question! Let me know which class time works best for you.",
+          "I appreciate your interest! Feel free to drop by my next class.",
+          "That's a common question — happy to discuss it in our next session!",
+          "Sure thing! I'll make sure to cover that in the next class."
+        ];
+        const reply = replies[Math.floor(Math.random() * replies.length)];
+        body.innerHTML += '<div class="chat-msg chat-msg-instructor"><strong>' + instName + ':</strong> ' + reply + '</div>';
+        body.scrollTop = body.scrollHeight;
+      }, 800);
+
+      body.scrollTop = body.scrollHeight;
+    }
+
+    function renderInstructors() {
+      const app = document.getElementById('app');
+      const mainContent = document.getElementById('mainContent');
+
+      const mobileHeaderHTML = createMobileHeader();
+      mainContent.insertAdjacentHTML('beforebegin', mobileHeaderHTML);
+      app.insertAdjacentHTML('afterbegin', createSidebar('instructors'));
+
+      const specialties = ['all', 'Yoga', 'HIIT', 'Pilates', 'Boxing', 'Strength'];
+
+      mainContent.innerHTML = `
+        <div class="instructors-header fade-in">
+          <div>
+            <h1>Instructors</h1>
+            <p class="instructors-subtitle">Meet our expert team of ${AppData.instructors.length} certified instructors</p>
+          </div>
+        </div>
+
+        <!-- Search -->
+        <div class="instructor-search fade-in">
+          <div class="search-input-wrap">
+            ${Icons.search}
+            <input type="text" placeholder="Search instructors..." oninput="handleSearch(this.value)">
+          </div>
+        </div>
+
+        <!-- Filter Chips -->
+        <div class="filter-chips fade-in">
+          ${specialties.map(s => `
+            <button class="filter-chip ${s === 'all' ? 'active' : ''}" onclick="setSpecialty('${s}', this)">
+              ${s === 'all' ? 'All Instructors' : s}
+            </button>
+          `).join('')}
+        </div>
+
+        <!-- Instructors Grid -->
+        <div class="instructors-grid" id="instructorsGrid"></div>
+      `;
+
+      renderInstructorCards();
+      initSidebar();
+      ThemeManager.updateToggleUI(ThemeManager.get());
+    }
+
+    renderInstructors();
+  </script>
+</body>
+</html>

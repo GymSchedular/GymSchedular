@@ -1,0 +1,297 @@
+/* ========================================
+   GymSchedular - Responsive Styles
+   ======================================== */
+
+/* Tablet: 769px - 1024px */
+@media (max-width: 1024px) {
+  .stats-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .dashboard-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .dashboard-sidebar-right {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: var(--space-6);
+  }
+
+  .class-detail-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .class-detail-sidebar {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: var(--space-6);
+  }
+
+  .booking-form-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .instructor-card {
+    flex-direction: column;
+  }
+
+  .instructor-card-image {
+    width: 100%;
+    height: 200px;
+  }
+
+  .main-content {
+    padding: var(--space-6);
+  }
+}
+
+/* Mobile: up to 768px */
+@media (max-width: 768px) {
+  :root {
+    --sidebar-width: 260px;
+  }
+
+  .main-content {
+    padding: var(--space-4);
+    margin-left: 0 !important;
+  }
+
+  .stats-grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: var(--space-3);
+  }
+
+  .stat-card {
+    padding: var(--space-4);
+  }
+
+  .stat-value {
+    font-size: var(--font-size-2xl);
+  }
+
+  .dashboard-header {
+    flex-direction: column;
+    gap: var(--space-3);
+    align-items: flex-start;
+  }
+
+  .dashboard-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .dashboard-sidebar-right {
+    grid-template-columns: 1fr;
+  }
+
+  .schedule-cards-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .schedule-cards {
+    grid-template-columns: 1fr;
+  }
+
+  .spaces-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .live-cards-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .day-selector {
+    overflow-x: auto;
+  }
+
+  .day-item {
+    min-width: 60px;
+    padding: var(--space-2) var(--space-3);
+  }
+
+  .class-detail-hero {
+    height: 200px;
+    border-radius: var(--radius-lg);
+  }
+
+  .class-detail-title {
+    font-size: var(--font-size-xl);
+  }
+
+  .class-detail-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .class-detail-sidebar {
+    grid-template-columns: 1fr;
+  }
+
+  .benefits-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .classes-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .class-select-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .time-slots-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .instructors-search-bar {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .search-divider {
+    width: 100%;
+    height: 1px;
+  }
+
+  .search-filters {
+    overflow-x: auto;
+    padding-bottom: var(--space-1);
+  }
+
+  .instructor-card {
+    flex-direction: column;
+  }
+
+  .instructor-card-image {
+    width: 100%;
+    height: 200px;
+  }
+
+  .instructors-header {
+    flex-direction: column;
+    gap: var(--space-3);
+  }
+
+  .booking-steps {
+    flex-direction: column;
+    gap: var(--space-3);
+  }
+
+  .booking-step-line {
+    display: none;
+  }
+
+  .schedule-page-header {
+    flex-direction: column;
+    gap: var(--space-3);
+    align-items: flex-start;
+  }
+
+  .live-header {
+    flex-direction: column;
+    gap: var(--space-3);
+    align-items: flex-start;
+  }
+
+  .coming-up-item {
+    flex-wrap: wrap;
+    gap: var(--space-3);
+  }
+
+  .coming-up-right {
+    width: 100%;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    padding-top: var(--space-2);
+    border-top: 1px solid var(--border-color);
+  }
+
+  .auth-features {
+    gap: var(--space-4);
+  }
+
+  .auth-feature-icon {
+    width: 36px;
+    height: 36px;
+  }
+
+  .fab {
+    bottom: 90px;
+  }
+}
+
+/* Small Mobile: up to 480px */
+@media (max-width: 480px) {
+  .stats-grid {
+    grid-template-columns: 1fr 1fr;
+    gap: var(--space-2);
+  }
+
+  .stat-card {
+    padding: var(--space-3);
+  }
+
+  .stat-value {
+    font-size: var(--font-size-xl);
+  }
+
+  .stat-label {
+    font-size: var(--font-size-xs);
+  }
+
+  .section-header {
+    flex-direction: column;
+    gap: var(--space-2);
+    align-items: flex-start;
+  }
+
+  .schedule-card-image {
+    height: 160px;
+  }
+
+  .live-card {
+    height: 180px;
+  }
+
+  .class-detail-hero {
+    height: 180px;
+  }
+
+  .class-detail-hero-content {
+    padding: var(--space-4);
+  }
+
+  .class-detail-title {
+    font-size: var(--font-size-lg);
+  }
+
+  h1 {
+    font-size: var(--font-size-xl) !important;
+  }
+
+  .fab {
+    width: 44px;
+    height: 44px;
+    bottom: 80px;
+    right: var(--space-4);
+  }
+
+  .fab svg {
+    width: 20px;
+    height: 20px;
+  }
+
+  .bottom-tab {
+    padding: var(--space-1) var(--space-2);
+    min-width: 44px;
+  }
+
+  .bottom-tab-icon svg {
+    width: 20px;
+    height: 20px;
+  }
+
+  .bottom-tab-label {
+    font-size: 9px;
+  }
+}

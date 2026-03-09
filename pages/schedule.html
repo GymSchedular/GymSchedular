@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>GymSchedular - Schedule</title>
+  <link rel="stylesheet" href="../css/variables.css">
+  <link rel="stylesheet" href="../css/base.css">
+  <link rel="stylesheet" href="../css/components.css">
+  <link rel="stylesheet" href="../css/sidebar.css">
+  <link rel="stylesheet" href="../css/schedule.css">
+  <link rel="stylesheet" href="../css/responsive.css">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%23dc3545'><path d='M20.57 14.86L22 13.43 20.57 12 17 15.57 8.43 7 12 3.43 10.57 2 9.14 3.43 7.71 2 5.57 4.14 4.14 2.71 2.71 4.14l1.43 1.43L2 7.71l1.43 1.43L2 10.57 3.43 12 7 8.43 15.57 17 12 20.57 13.43 22l1.43-1.43L16.29 22l2.14-2.14 1.43 1.43 1.43-1.43-1.43-1.43L22 16.29z'/></svg>">
+</head>
+<body>
+  <div class="app-layout" id="app">
+    <main class="main-content" id="mainContent"></main>
+  </div>
+
+  <script src="../js/utils/storage.js"></script>
+  <script src="../js/utils/theme.js"></script>
+  <script src="../js/utils/icons.js"></script>
+  <script src="../js/utils/data.js"></script>
+  <script src="../js/components/sidebar.js"></script>
+  <script src="../js/components/toast.js"></script>
+
+  <script>
+    if (!UserManager.isLoggedIn()) {
+      window.location.href = 'login.html';
+    }
+
+    const scheduleClasses = [
+      { name: 'Power Yoga Flow', instructor: 'Sarah Chen', time: '7:00 AM', duration: '60 min', category: 'yoga', spots: 8, image: 'https://images.unsplash.com/photo-1544367567-0f2fcb009e0b?w=400&h=250&fit=crop', booked: true },
+      { name: 'HIIT Blast', instructor: 'Marcus Johnson', time: '9:00 AM', duration: '45 min', category: 'hiit', spots: 12, image: 'https://images.unsplash.com/photo-1534258936925-c58bed479fcb?w=400&h=250&fit=crop', booked: true },
+      { name: 'Pilates Core', instructor: 'Emma Wilson', time: '10:30 AM', duration: '50 min', category: 'pilates', spots: 6, image: 'https://images.unsplash.com/photo-1518611012118-696072aa579a?w=400&h=250&fit=crop', booked: false },
+      { name: 'Boxing Fundamentals', instructor: 'Jake Torres', time: '12:00 PM', duration: '60 min', category: 'boxing', spots: 10, image: 'https://images.unsplash.com/photo-1549719386-74dfcbf7dbed?w=400&h=250&fit=crop', booked: false },
+      { name: 'Strength & Conditioning', instructor: 'Emma Wilson', time: '5:30 PM', duration: '55 min', category: 'strength', spots: 0, image: 'https://images.unsplash.com/photo-1581009146145-b5ef050c2e1e?w=400&h=250&fit=crop', booked: true, waitlisted: true },
+      { name: 'Evening Yoga', instructor: 'Sarah Chen', time: '7:00 PM', duration: '60 min', category: 'yoga', spots: 15, image: 'https://images.unsplash.com/photo-1506126613408-eca07ce68773?w=400&h=250&fit=crop', booked: false }
+    ];
+
+    const weekDays = [
+      { day: 'Mon', date: '3', month: 'Mar' },
+      { day: 'Tue', date: '4', month: 'Mar' },
+      { day: 'Wed', date: '5', month: 'Mar', active: true },
+      { day: 'Thu', date: '6', month: 'Mar' },
+      { day: 'Fri', date: '7', month: 'Mar' },
+      { day: 'Sat', date: '8', month: 'Mar' },
+      { day: 'Sun', date: '9', month: 'Mar' }
+    ];
+
+    let selectedDay = 2; // Wed index
+
+    function toggleFavorite(btn, name) {
+      btn.classList.toggle('active');
+      const isFav = btn.classList.contains('active');
+      showToast(isFav ? `${name} added to favorites` : `${name} removed from favorites`, isFav ? 'success' : 'info');
+    }
+
+    function bookClass(btn, cls) {
+      if (cls.booked && !cls.waitlisted) {
+        showToast('You\'re already booked for this class', 'info');
+        return;
+      }
+      btn.textContent = 'Booked ✓';
+      btn.classList.add('booked');
+      btn.disabled = true;
+      showToast(`Booked ${cls.name} at ${cls.time}!`, 'success');
+    }
+
+    function renderSchedule() {
+      const app = document.getElementById('app');
+      const mainContent = document.getElementById('mainContent');
+
+      const mobileHeaderHTML = createMobileHeader();
+      mainContent.insertAdjacentHTML('beforebegin', mobileHeaderHTML);
+      app.insertAdjacentHTML('afterbegin', createSidebar('schedule'));
+
+      mainContent.innerHTML = `
+        <div class="schedule-header fade-in">
+          <div>
+            <h1>Schedule</h1>
+            <p class="schedule-subtitle">March 2026</p>
+          </div>
+          <div style="display:flex;align-items:center;gap:var(--space-3);">
+            <div class="view-toggle">
+              <button class="view-btn active" title="Grid view">${Icons.grid}</button>
+              <button class="view-btn" title="List view">${Icons.list}</button>
+            </div>
+            <button class="btn btn-outline" onclick="window.location.href='classes.html'">
+              ${Icons.filter} Filter
+            </button>
+          </div>
+        </div>
+
+        <!-- Day Selector -->
+        <div class="day-selector fade-in">
+          ${weekDays.map((d, i) => `
+            <button class="day-pill ${i === selectedDay ? 'active' : ''}" onclick="selectDay(${i}, this)">
+              <span class="day-name">${d.day}</span>
+              <span class="day-date">${d.date}</span>
+            </button>
+          `).join('')}
+        </div>
+
+        <!-- Schedule Cards Grid -->
+        <div class="schedule-cards" id="scheduleCards">
+          ${scheduleClasses.map((cls, i) => `
+            <div class="schedule-card animate-slide-up" style="animation-delay:${0.05 * (i + 1)}s">
+              <div class="schedule-card-image">
+                <img src="${cls.image}" alt="${cls.name}" loading="lazy">
+                <span class="badge badge-${cls.category}">${cls.category.charAt(0).toUpperCase() + cls.category.slice(1)}</span>
+                <button class="favorite-btn ${cls.booked ? 'active' : ''}" onclick="toggleFavorite(this, '${cls.name}')" aria-label="Toggle favorite">
+                  ${Icons.heart}
+                </button>
+              </div>
+              <div class="schedule-card-body">
+                <h3>${cls.name}</h3>
+                <p class="card-instructor">${Icons.user} ${cls.instructor}</p>
+                <div class="schedule-card-footer">
+                  <div class="card-details">
+                    <span>${Icons.clock} ${cls.time}</span>
+                    <span>${Icons.fire} ${cls.duration}</span>
+                  </div>
+                  <div class="card-spots">
+                    ${cls.spots > 0
+                      ? `<span class="spots-available">${cls.spots} spots left</span>`
+                      : `<span class="spots-full">Full</span>`
+                    }
+                  </div>
+                </div>
+                <button class="btn btn-primary btn-sm ${cls.booked && !cls.waitlisted ? 'booked' : ''}" 
+                        onclick="bookClass(this, scheduleClasses[${i}])"
+                        ${cls.booked && !cls.waitlisted ? 'disabled' : ''}>
+                  ${cls.booked && !cls.waitlisted ? 'Booked ✓' : cls.waitlisted ? 'Join Waitlist' : 'Book Now'}
+                </button>
+              </div>
+            </div>
+          `).join('')}
+        </div>
+      `;
+
+      initSidebar();
+      ThemeManager.updateToggleUI(ThemeManager.get());
+    }
+
+    function selectDay(index, btn) {
+      selectedDay = index;
+      document.querySelectorAll('.day-pill').forEach(p => p.classList.remove('active'));
+      btn.classList.add('active');
+    }
+
+    renderSchedule();
+  </script>
+</body>
+</html>

@@ -1,0 +1,280 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>GymSchedular - Dashboard</title>
+  <link rel="stylesheet" href="../css/variables.css">
+  <link rel="stylesheet" href="../css/base.css">
+  <link rel="stylesheet" href="../css/components.css">
+  <link rel="stylesheet" href="../css/sidebar.css">
+  <link rel="stylesheet" href="../css/dashboard.css">
+  <link rel="stylesheet" href="../css/chatbot.css">
+  <link rel="stylesheet" href="../css/responsive.css">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%23dc3545'><path d='M20.57 14.86L22 13.43 20.57 12 17 15.57 8.43 7 12 3.43 10.57 2 9.14 3.43 7.71 2 5.57 4.14 4.14 2.71 2.71 4.14l1.43 1.43L2 7.71l1.43 1.43L2 10.57 3.43 12 7 8.43 15.57 17 12 20.57 13.43 22l1.43-1.43L16.29 22l2.14-2.14 1.43 1.43 1.43-1.43-1.43-1.43L22 16.29z'/></svg>">
+</head>
+<body>
+  <div class="app-layout" id="app">
+    <!-- Sidebar injected by JS -->
+    <!-- Mobile Header injected by JS -->
+    <main class="main-content" id="mainContent">
+      <!-- Content injected by JS -->
+    </main>
+  </div>
+
+  <script src="../js/utils/storage.js"></script>
+  <script src="../js/utils/theme.js"></script>
+  <script src="../js/utils/icons.js"></script>
+  <script src="../js/utils/data.js"></script>
+  <script src="../js/components/sidebar.js"></script>
+  <script src="../js/components/toast.js"></script>
+  <script src="../js/components/chatbot.js"></script>
+  <script>
+    // Auth guard
+    if (!UserManager.isLoggedIn()) {
+      window.location.href = 'login.html';
+    }
+
+    const user = UserManager.getCurrentUser();
+    const firstName = user ? user.name.split(' ')[0] : 'Karen';
+
+    function getGreeting() {
+      const h = new Date().getHours();
+      if (h < 12) return 'Good morning';
+      if (h < 17) return 'Good afternoon';
+      return 'Good evening';
+    }
+
+    function renderDashboard() {
+      const app = document.getElementById('app');
+      const mainContent = document.getElementById('mainContent');
+
+      // Insert mobile header before main
+      const mobileHeaderHTML = createMobileHeader();
+      mainContent.insertAdjacentHTML('beforebegin', mobileHeaderHTML);
+
+      // Insert sidebar
+      app.insertAdjacentHTML('afterbegin', createSidebar('dashboard'));
+
+      mainContent.innerHTML = `
+        <!-- Dashboard Header -->
+        <div class="dashboard-header fade-in">
+          <a href="profile.html" class="dashboard-greeting" style="text-decoration:none;color:inherit;">
+            <div class="avatar avatar-lg" style="background:var(--brand-primary);font-size:var(--font-size-lg);overflow:hidden;">
+              ${user && user.profilePhoto ? `<img src="${user.profilePhoto}" alt="${firstName}" style="width:100%;height:100%;object-fit:cover;border-radius:50%;">` : (user ? user.name.split(' ').map(n=>n[0]).join('') : 'KW')}
+            </div>
+            <div class="dashboard-greeting-text">
+              <p>${getGreeting()}</p>
+              <h1>${firstName}</h1>
+            </div>
+          </a>
+          <div style="display:flex;align-items:center;gap:var(--space-3);">
+            ${ThemeManager.createToggleButton()}
+            <span class="premium-badge">
+              ${Icons.crown}
+              Premium
+            </span>
+          </div>
+        </div>
+
+        <!-- Stats Grid -->
+        <div class="stats-grid">
+          <div class="stat-card animate-slide-up" style="animation-delay:0.05s">
+            <div class="stat-card-header">
+              <div class="stat-icon">${Icons.classes}</div>
+              <div class="stat-trend">${Icons.trendUp} +3</div>
+            </div>
+            <div class="stat-value">47</div>
+            <div class="stat-label">Total Classes</div>
+          </div>
+          <div class="stat-card animate-slide-up" style="animation-delay:0.1s">
+            <div class="stat-card-header">
+              <div class="stat-icon">${Icons.zap}</div>
+              <div class="stat-trend"></div>
+            </div>
+            <div class="stat-value">12<sup>days</sup></div>
+            <div class="stat-label">Streak</div>
+          </div>
+          <div class="stat-card animate-slide-up" style="animation-delay:0.15s">
+            <div class="stat-card-header">
+              <div class="stat-icon">${Icons.fire}</div>
+              <div class="stat-trend">${Icons.trendUp} +2.1k</div>
+            </div>
+            <div class="stat-value">12.4k</div>
+            <div class="stat-label">Calories Burned</div>
+          </div>
+          <div class="stat-card animate-slide-up" style="animation-delay:0.2s">
+            <div class="stat-card-header">
+              <div class="stat-icon">${Icons.activity}</div>
+              <div class="stat-trend">${Icons.trendUp} +4.5</div>
+            </div>
+            <div class="stat-value">38</div>
+            <div class="stat-label">Hours Trained</div>
+          </div>
+        </div>
+
+        <!-- Main Grid -->
+        <div class="dashboard-grid">
+          <div class="dashboard-main">
+            <!-- Today's Schedule -->
+            <div class="card">
+              <div class="section-header">
+                <div>
+                  <h3 class="section-title">Today's Schedule</h3>
+                  <p class="section-subtitle">3 classes booked</p>
+                </div>
+                <a href="schedule.html" class="section-link">View all ${Icons.chevronRight}</a>
+              </div>
+              <div class="schedule-list">
+                <div class="schedule-item">
+                  <div class="schedule-time">
+                    <div class="time">7:00</div>
+                    <div class="period">AM</div>
+                  </div>
+                  <div class="schedule-divider yoga"></div>
+                  <div class="schedule-info">
+                    <h4>Power Yoga Flow</h4>
+                    <div class="schedule-meta">
+                      <span>${Icons.user} Sarah Chen</span>
+                      <span>${Icons.clock} 60 min</span>
+                      <span>${Icons.mapPin} Studio A</span>
+                    </div>
+                  </div>
+                </div>
+                <div class="schedule-item">
+                  <div class="schedule-time">
+                    <div class="time">9:00</div>
+                    <div class="period">AM</div>
+                  </div>
+                  <div class="schedule-divider hiit"></div>
+                  <div class="schedule-info">
+                    <h4>HIIT Blast</h4>
+                    <div class="schedule-meta">
+                      <span>${Icons.user} Marcus Johnson</span>
+                      <span>${Icons.clock} 45 min</span>
+                      <span>${Icons.mapPin} Main Floor</span>
+                    </div>
+                  </div>
+                </div>
+                <div class="schedule-item">
+                  <div class="schedule-time">
+                    <div class="time">5:30</div>
+                    <div class="period">PM</div>
+                  </div>
+                  <div class="schedule-divider strength"></div>
+                  <div class="schedule-info">
+                    <h4>Strength & Conditioning <span class="schedule-badge-waitlisted">Waitlisted</span></h4>
+                    <div class="schedule-meta">
+                      <span>${Icons.user} Emma Wilson</span>
+                      <span>${Icons.clock} 55 min</span>
+                      <span>${Icons.mapPin} Weight Room</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <a href="schedule.html" class="book-another-btn">
+                View full schedule
+              </a>
+            </div>
+
+            <!-- Recent Activity -->
+            <div class="card">
+              <div class="section-header">
+                <h3 class="section-title">Recent Activity</h3>
+                <a href="#" class="section-link">See all</a>
+              </div>
+              <div class="activity-list">
+                ${AppData.recentActivity.map(act => `
+                  <div class="activity-item">
+                    <div class="activity-icon">${Icons.classes}</div>
+                    <div class="activity-info">
+                      <h4>${act.name}</h4>
+                      <p>${act.date}</p>
+                    </div>
+                    <div class="activity-stats">
+                      <div class="calories">${act.calories} cal</div>
+                      <div class="duration">${act.duration}</div>
+                    </div>
+                  </div>
+                `).join('')}
+              </div>
+            </div>
+          </div>
+
+          <!-- Right Sidebar -->
+          <div class="dashboard-sidebar-right">
+            <!-- This Week -->
+            <div class="card card-compact">
+              <div class="week-header">
+                <h3 class="section-title">This Week</h3>
+                <span class="stat-trend">${Icons.trendUp} 5 of 7 days</span>
+              </div>
+              <div class="week-days">
+                ${AppData.weekData.days.map((day, i) => {
+                  const count = AppData.weekData.activity[i];
+                  return `
+                    <div class="week-day">
+                      <div class="week-day-dots">
+                        ${Array.from({length: count}, (_, j) => `<div class="week-dot ${j > 1 ? 'secondary' : ''}"></div>`).join('')}
+                      </div>
+                      <span class="week-day-label">${day}</span>
+                    </div>
+                  `;
+                }).join('')}
+              </div>
+              <div class="week-stats">
+                <div class="week-stat-item">
+                  <div class="week-stat-label">Total calories</div>
+                  <div class="week-stat-value">${AppData.weekData.totalCalories} cal</div>
+                </div>
+                <div class="week-stat-item">
+                  <div class="week-stat-label">Avg per session</div>
+                  <div class="week-stat-value">${AppData.weekData.avgPerSession} cal</div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Top Instructors -->
+            <div class="card card-compact">
+              <div class="section-header">
+                <h3 class="section-title">Top Instructors</h3>
+                <a href="instructors.html" class="section-link">View all</a>
+              </div>
+              <div class="top-instructors">
+                ${AppData.instructors.slice(0, 2).map(inst => `
+                  <div class="instructor-item" onclick="window.location.href='instructors.html'">
+                    <img class="instructor-item-img" src="${inst.image}" alt="${inst.name}" loading="lazy">
+                    <div class="instructor-item-info">
+                      <div class="instructor-item-name">${inst.name}</div>
+                      <div class="instructor-item-specialty">${inst.specialties.join(' & ')}</div>
+                    </div>
+                    <div class="instructor-item-rating">
+                      ${Icons.star}
+                      ${inst.rating}
+                    </div>
+                  </div>
+                `).join('')}
+              </div>
+            </div>
+
+            <!-- Premium Plan -->
+            <div class="premium-card">
+              <div class="premium-card-badge">ACTIVE</div>
+              <h3>Premium Plan</h3>
+              <p>Unlimited Classes</p>
+              <div class="premium-card-actions">
+                ${Icons.messageSquare}
+              </div>
+            </div>
+          </div>
+        </div>
+      `;
+
+      initSidebar();
+      ChatBot.init();      ThemeManager.updateToggleUI(ThemeManager.get());
+    }
+
+    renderDashboard();
+  </script>
+</body>
+</html>

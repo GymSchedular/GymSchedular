@@ -1,0 +1,250 @@
+/* ========================================
+   GymSchedular - Classes Page Styles
+   ======================================== */
+
+.classes-header {
+  margin-bottom: var(--space-8);
+}
+
+.classes-header h1 {
+  font-size: var(--font-size-2xl);
+  font-weight: 700;
+  margin-bottom: var(--space-1);
+}
+
+.classes-header p {
+  color: var(--text-secondary);
+  font-size: var(--font-size-base);
+}
+
+.classes-filters {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  margin-bottom: var(--space-8);
+  flex-wrap: wrap;
+}
+
+.filter-chip {
+  padding: 0.5rem 1rem;
+  border-radius: var(--radius-full);
+  background: var(--bg-card);
+  border: 1px solid var(--border-color);
+  font-size: var(--font-size-sm);
+  font-weight: 500;
+  cursor: pointer;
+  transition: all var(--transition-fast);
+  color: var(--text-secondary);
+}
+
+.filter-chip:hover {
+  border-color: var(--brand-primary);
+  color: var(--brand-primary);
+}
+
+.filter-chip.active {
+  background: var(--brand-primary);
+  border-color: var(--brand-primary);
+  color: #ffffff;
+}
+
+.classes-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+  gap: var(--space-8);
+}
+
+/* Reuses schedule-card styles for consistency */
+
+.classes-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+}
+
+.classes-search {
+  margin-bottom: var(--space-4);
+}
+
+.classes-search .search-input-wrap {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  padding: var(--space-3) var(--space-4);
+  background: var(--bg-card);
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-lg);
+}
+
+.classes-search .search-input-wrap svg {
+  width: 18px;
+  height: 18px;
+  color: var(--text-tertiary);
+  flex-shrink: 0;
+}
+
+.classes-search .search-input-wrap input {
+  flex: 1;
+  background: transparent;
+  color: var(--text-primary);
+  font-size: var(--font-size-base);
+}
+
+.classes-search .search-input-wrap input::placeholder {
+  color: var(--text-tertiary);
+}
+
+/* Filter Chips */
+.filter-chips {
+  display: flex;
+  gap: var(--space-2);
+  flex-wrap: wrap;
+  margin-bottom: var(--space-6);
+}
+
+/* View Toggle */
+.view-toggle {
+  display: flex;
+  background: var(--bg-card);
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-md);
+  overflow: hidden;
+}
+
+.view-btn {
+  padding: var(--space-2);
+  background: transparent;
+  color: var(--text-secondary);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all var(--transition-fast);
+}
+
+.view-btn:hover {
+  color: var(--text-primary);
+}
+
+.view-btn.active {
+  background: var(--brand-primary);
+  color: #ffffff;
+}
+
+.view-btn svg {
+  width: 18px;
+  height: 18px;
+}
+
+/* Class Card */
+.class-card {
+  display: block;
+  background: var(--bg-card);
+  border-radius: var(--radius-xl);
+  border: 1px solid var(--border-color);
+  overflow: hidden;
+  transition: all var(--transition-base);
+  text-decoration: none;
+  color: inherit;
+}
+
+.class-card:hover {
+  transform: translateY(-4px);
+  box-shadow: var(--card-shadow);
+  border-color: var(--border-color-strong);
+}
+
+.class-card-image {
+  position: relative;
+  height: 220px;
+  overflow: hidden;
+}
+
+.class-card-image img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform var(--transition-slow);
+}
+
+.class-card:hover .class-card-image img {
+  transform: scale(1.05);
+}
+
+.class-card-level {
+  position: absolute;
+  top: var(--space-3);
+  right: var(--space-3);
+  padding: 3px 10px;
+  background: rgba(0,0,0,0.6);
+  backdrop-filter: blur(8px);
+  border-radius: var(--radius-full);
+  font-size: var(--font-size-xs);
+  color: #ffffff;
+  font-weight: 500;
+}
+
+.class-card-body {
+  padding: var(--space-5) var(--space-6);
+}
+
+.class-card-body h3 {
+  font-size: var(--font-size-md);
+  font-weight: 700;
+  margin-bottom: var(--space-1);
+}
+
+.class-card-instructor {
+  font-size: var(--font-size-sm);
+  color: var(--text-secondary);
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  margin-bottom: var(--space-3);
+}
+
+.class-card-instructor svg {
+  width: 14px;
+  height: 14px;
+}
+
+.class-card-meta {
+  display: flex;
+  gap: var(--space-3);
+  font-size: var(--font-size-xs);
+  color: var(--text-secondary);
+  margin-bottom: var(--space-3);
+}
+
+.class-card-meta span {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.class-card-meta svg {
+  width: 12px;
+  height: 12px;
+}
+
+.class-card-footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding-top: var(--space-3);
+  margin-top: var(--space-3);
+  border-top: 1px solid var(--border-color);
+}
+
+.class-time {
+  font-size: var(--font-size-xs);
+  color: var(--text-secondary);
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.class-time svg {
+  width: 12px;
+  height: 12px;
+}

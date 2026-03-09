@@ -1,0 +1,458 @@
+/* ========================================
+   GymSchedular - Class Detail Styles
+   ======================================== */
+
+/* Hero */
+.detail-hero {
+  position: relative;
+  height: 320px;
+  border-radius: var(--radius-xl);
+  overflow: hidden;
+  margin-bottom: var(--space-6);
+}
+
+.detail-hero img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.detail-hero-overlay {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(to top, rgba(0,0,0,0.8) 0%, rgba(0,0,0,0.2) 50%, transparent 100%);
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  padding: var(--space-4);
+}
+
+.back-btn {
+  width: 40px;
+  height: 40px;
+  border-radius: var(--radius-full);
+  background: rgba(0, 0, 0, 0.4);
+  backdrop-filter: blur(8px);
+  border: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #ffffff;
+  cursor: pointer;
+  transition: all var(--transition-fast);
+}
+
+.back-btn:hover {
+  background: rgba(0, 0, 0, 0.6);
+}
+
+.back-btn svg {
+  width: 20px;
+  height: 20px;
+}
+
+.detail-hero-actions {
+  display: flex;
+  gap: var(--space-2);
+}
+
+.action-btn {
+  width: 40px;
+  height: 40px;
+  border-radius: var(--radius-full);
+  background: rgba(0, 0, 0, 0.4);
+  backdrop-filter: blur(8px);
+  border: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #ffffff;
+  cursor: pointer;
+  transition: all var(--transition-fast);
+}
+
+.action-btn:hover {
+  background: rgba(0, 0, 0, 0.6);
+}
+
+.action-btn.active {
+  background: var(--brand-primary);
+}
+
+.action-btn svg {
+  width: 20px;
+  height: 20px;
+}
+
+.detail-hero-content {
+  position: absolute;
+  bottom: var(--space-6);
+  left: var(--space-6);
+  color: #ffffff;
+}
+
+.detail-hero-content .badge {
+  margin-bottom: var(--space-2);
+}
+
+.detail-hero-content h1 {
+  font-size: var(--font-size-2xl);
+  font-weight: 800;
+  margin-bottom: var(--space-1);
+}
+
+.detail-hero-content p {
+  font-size: var(--font-size-sm);
+  opacity: 0.85;
+}
+
+/* Grid Layout */
+.detail-grid {
+  display: grid;
+  grid-template-columns: 1fr 340px;
+  gap: var(--space-6);
+}
+
+.detail-main {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-6);
+}
+
+.detail-sidebar {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-6);
+}
+
+/* Quick Stats */
+.detail-stats {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: var(--space-4);
+}
+
+.detail-stat {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  padding: var(--space-4);
+  background: var(--bg-card);
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-lg);
+}
+
+.detail-stat-icon {
+  width: 40px;
+  height: 40px;
+  border-radius: var(--radius-md);
+  background: rgba(220, 53, 69, 0.12);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.detail-stat-icon svg {
+  width: 20px;
+  height: 20px;
+  color: var(--brand-primary);
+}
+
+.detail-stat-value {
+  font-size: var(--font-size-md);
+  font-weight: 700;
+}
+
+.detail-stat-label {
+  font-size: var(--font-size-xs);
+  color: var(--text-secondary);
+}
+
+/* Section Title */
+.section-title {
+  font-size: var(--font-size-lg);
+  font-weight: 700;
+  margin-bottom: var(--space-4);
+}
+
+/* About */
+.detail-description {
+  color: var(--text-secondary);
+  line-height: 1.7;
+  font-size: var(--font-size-base);
+}
+
+/* Benefits */
+.benefits-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: var(--space-3);
+}
+
+.benefit-item {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  font-size: var(--font-size-sm);
+  color: var(--text-secondary);
+}
+
+.benefit-icon {
+  width: 20px;
+  height: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.benefit-icon svg {
+  width: 16px;
+  height: 16px;
+  color: var(--brand-primary);
+}
+
+/* Instructor */
+.detail-instructor {
+  display: flex;
+  gap: var(--space-4);
+}
+
+.detail-instructor-img {
+  width: 72px;
+  height: 72px;
+  border-radius: var(--radius-full);
+  object-fit: cover;
+  flex-shrink: 0;
+}
+
+.detail-instructor-info h4 {
+  font-size: var(--font-size-md);
+  font-weight: 600;
+  margin-bottom: 2px;
+}
+
+.detail-instructor-specialty {
+  font-size: var(--font-size-sm);
+  color: var(--text-secondary);
+  margin-bottom: var(--space-2);
+}
+
+.detail-instructor-rating {
+  font-size: var(--font-size-sm);
+  color: var(--text-secondary);
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  margin-bottom: var(--space-2);
+}
+
+.detail-instructor-rating svg {
+  width: 14px;
+  height: 14px;
+  color: #fbbf24;
+  fill: #fbbf24;
+}
+
+.detail-instructor-bio {
+  font-size: var(--font-size-sm);
+  color: var(--text-secondary);
+  line-height: 1.6;
+}
+
+/* Equipment */
+.equipment-list {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+}
+
+.equipment-item {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  font-size: var(--font-size-sm);
+  color: var(--text-secondary);
+}
+
+.equipment-icon {
+  width: 20px;
+  height: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.equipment-icon svg {
+  width: 16px;
+  height: 16px;
+  color: var(--brand-primary);
+}
+
+/* Difficulty */
+.difficulty-bars {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+}
+
+.difficulty-item {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+}
+
+.difficulty-label {
+  display: flex;
+  justify-content: space-between;
+  font-size: var(--font-size-sm);
+  color: var(--text-secondary);
+}
+
+.progress-bar {
+  height: 8px;
+  border-radius: var(--radius-full);
+  background: var(--bg-input);
+  overflow: hidden;
+}
+
+.progress-fill {
+  height: 100%;
+  border-radius: var(--radius-full);
+  background: var(--brand-primary);
+  transition: width 0.6s ease;
+}
+
+/* Weekly Schedule */
+.weekly-schedule {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+}
+
+.weekly-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: var(--space-3) 0;
+  border-bottom: 1px solid var(--border-color);
+  gap: var(--space-3);
+}
+
+.weekly-item:last-child {
+  border-bottom: none;
+}
+
+.weekly-day {
+  font-weight: 600;
+  font-size: var(--font-size-sm);
+  min-width: 90px;
+}
+
+.weekly-time {
+  font-size: var(--font-size-sm);
+  color: var(--text-secondary);
+  flex: 1;
+}
+
+.weekly-spots {
+  font-size: var(--font-size-sm);
+  color: var(--text-secondary);
+  min-width: 70px;
+  text-align: right;
+}
+
+/* Booking Card */
+.booking-card {
+  padding: var(--space-6);
+  background: var(--bg-card);
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-xl);
+  position: sticky;
+  top: var(--space-4);
+}
+
+.booking-card h3 {
+  font-size: var(--font-size-lg);
+  font-weight: 700;
+  margin-bottom: var(--space-5);
+}
+
+.booking-details {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+  margin-bottom: var(--space-5);
+}
+
+.booking-detail-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: var(--font-size-sm);
+}
+
+.booking-detail-label {
+  color: var(--text-secondary);
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+}
+
+.booking-detail-label svg {
+  width: 14px;
+  height: 14px;
+}
+
+.booking-detail-value {
+  font-weight: 600;
+}
+
+.booking-card .btn-lg {
+  width: 100%;
+  margin-bottom: var(--space-3);
+}
+
+.booking-note {
+  font-size: var(--font-size-xs);
+  color: var(--text-tertiary);
+  text-align: center;
+}
+
+/* Responsive */
+@media (max-width: 1024px) {
+  .detail-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .detail-stats {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 768px) {
+  .detail-hero {
+    height: 240px;
+    border-radius: 0;
+  }
+
+  .detail-hero-content h1 {
+    font-size: var(--font-size-xl);
+  }
+
+  .detail-stats {
+    grid-template-columns: 1fr 1fr;
+  }
+
+  .benefits-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .detail-instructor {
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+  }
+}

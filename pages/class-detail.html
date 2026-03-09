@@ -1,0 +1,257 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>GymSchedular - Class Detail</title>
+  <link rel="stylesheet" href="../css/variables.css">
+  <link rel="stylesheet" href="../css/base.css">
+  <link rel="stylesheet" href="../css/components.css">
+  <link rel="stylesheet" href="../css/sidebar.css">
+  <link rel="stylesheet" href="../css/class-detail.css">
+  <link rel="stylesheet" href="../css/responsive.css">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%23dc3545'><path d='M20.57 14.86L22 13.43 20.57 12 17 15.57 8.43 7 12 3.43 10.57 2 9.14 3.43 7.71 2 5.57 4.14 4.14 2.71 2.71 4.14l1.43 1.43L2 7.71l1.43 1.43L2 10.57 3.43 12 7 8.43 15.57 17 12 20.57 13.43 22l1.43-1.43L16.29 22l2.14-2.14 1.43 1.43 1.43-1.43-1.43-1.43L22 16.29z'/></svg>">
+</head>
+<body>
+  <div class="app-layout" id="app">
+    <main class="main-content" id="mainContent"></main>
+  </div>
+
+  <script src="../js/utils/storage.js"></script>
+  <script src="../js/utils/theme.js"></script>
+  <script src="../js/utils/icons.js"></script>
+  <script src="../js/utils/data.js"></script>
+  <script src="../js/components/sidebar.js"></script>
+  <script src="../js/components/toast.js"></script>
+
+  <script>
+    if (!UserManager.isLoggedIn()) {
+      window.location.href = 'login.html';
+    }
+
+    // Get class ID from URL
+    const params = new URLSearchParams(window.location.search);
+    const rawId = params.get('id');
+    const classId = rawId ? (isNaN(rawId) ? rawId : Number(rawId)) : null;
+    const cls = classId !== null ? (AppData.classes.find(c => c.id === classId) || AppData.classes[3]) : AppData.classes[3]; // default to Strength & Conditioning
+    const instructor = AppData.instructors.find(i => i.name === cls.instructor) || AppData.instructors[2];
+
+    function bookThisClass() {
+      const booking = BookingManager.addBooking({
+        classId: cls.id,
+        className: cls.name,
+        instructor: cls.instructor,
+        time: cls.time,
+        duration: cls.duration + ' min',
+        date: new Date().toISOString().split('T')[0]
+      });
+      showToast(`Booked ${cls.name}! See you at ${cls.time}`, 'success');
+      document.getElementById('bookBtn').textContent = 'Booked ✓';
+      document.getElementById('bookBtn').disabled = true;
+    }
+
+    function toggleFav() {
+      const isFav = FavoritesManager.toggle(cls.id);
+      const btn = document.getElementById('favBtn');
+      btn.classList.toggle('active', isFav);
+      showToast(isFav ? 'Added to favorites!' : 'Removed from favorites', isFav ? 'success' : 'info');
+    }
+
+    function renderClassDetail() {
+      const app = document.getElementById('app');
+      const mainContent = document.getElementById('mainContent');
+
+      const mobileHeaderHTML = createMobileHeader();
+      mainContent.insertAdjacentHTML('beforebegin', mobileHeaderHTML);
+      app.insertAdjacentHTML('afterbegin', createSidebar('classes'));
+
+      const isFav = FavoritesManager.isFavorite(cls.id);
+      const isBooked = BookingManager.getBookings().some(b => b.classId === cls.id);
+
+      mainContent.innerHTML = `
+        <!-- Hero Section -->
+        <div class="detail-hero fade-in">
+          <img src="${cls.image}" alt="${cls.name}" loading="lazy">
+          <div class="detail-hero-overlay">
+            <button class="back-btn" onclick="history.back()">
+              ${Icons.arrowLeft}
+            </button>
+            <div class="detail-hero-actions">
+              <button class="action-btn" id="favBtn" onclick="toggleFav()" class="${isFav ? 'active' : ''}">
+                ${Icons.heart}
+              </button>
+              <button class="action-btn" onclick="showToast('Link copied to clipboard!', 'success')">
+                ${Icons.share}
+              </button>
+            </div>
+          </div>
+          <div class="detail-hero-content">
+            <span class="badge badge-${cls.category.toLowerCase()}">${cls.category}</span>
+            <h1>${cls.name}</h1>
+            <p>with ${cls.instructor}</p>
+          </div>
+        </div>
+
+        <!-- Detail Grid -->
+        <div class="detail-grid">
+          <div class="detail-main">
+            <!-- Quick Stats -->
+            <div class="detail-stats">
+              <div class="detail-stat">
+                <div class="detail-stat-icon">${Icons.clock}</div>
+                <div class="detail-stat-info">
+                  <div class="detail-stat-value">${cls.duration} min</div>
+                  <div class="detail-stat-label">Duration</div>
+                </div>
+              </div>
+              <div class="detail-stat">
+                <div class="detail-stat-icon">${Icons.fire}</div>
+                <div class="detail-stat-info">
+                  <div class="detail-stat-value">${cls.calories}</div>
+                  <div class="detail-stat-label">Calories</div>
+                </div>
+              </div>
+              <div class="detail-stat">
+                <div class="detail-stat-icon">${Icons.users}</div>
+                <div class="detail-stat-info">
+                  <div class="detail-stat-value">${cls.spots}</div>
+                  <div class="detail-stat-label">Spots Left</div>
+                </div>
+              </div>
+              <div class="detail-stat">
+                <div class="detail-stat-icon">${Icons.activity}</div>
+                <div class="detail-stat-info">
+                  <div class="detail-stat-value">${cls.level}</div>
+                  <div class="detail-stat-label">Level</div>
+                </div>
+              </div>
+            </div>
+
+            <!-- About -->
+            <div class="card">
+              <h3 class="section-title">About This Class</h3>
+              <p class="detail-description">${cls.description}</p>
+            </div>
+
+            <!-- Benefits -->
+            <div class="card">
+              <h3 class="section-title">Benefits</h3>
+              <div class="benefits-grid">
+                ${cls.benefits.map(b => `
+                  <div class="benefit-item">
+                    <div class="benefit-icon">${Icons.check}</div>
+                    <span>${b}</span>
+                  </div>
+                `).join('')}
+              </div>
+            </div>
+
+            <!-- Instructor -->
+            <div class="card">
+              <h3 class="section-title">Your Instructor</h3>
+              <div class="detail-instructor">
+                <img src="${instructor.image}" alt="${instructor.name}" class="detail-instructor-img" loading="lazy">
+                <div class="detail-instructor-info">
+                  <h4>${instructor.name}</h4>
+                  <p class="detail-instructor-specialty">${instructor.specialties.join(' & ')}</p>
+                  <div class="detail-instructor-rating">
+                    ${Icons.star} ${instructor.rating} · ${instructor.reviews}+ reviews
+                  </div>
+                  <p class="detail-instructor-bio">${instructor.bio}</p>
+                </div>
+              </div>
+            </div>
+
+            <!-- Equipment -->
+            <div class="card">
+              <h3 class="section-title">Equipment Needed</h3>
+              <div class="equipment-list">
+                ${cls.equipment.map(eq => `
+                  <div class="equipment-item">
+                    <div class="equipment-icon">${Icons.check}</div>
+                    <span>${eq}</span>
+                  </div>
+                `).join('')}
+              </div>
+            </div>
+
+            <!-- Difficulty -->
+            <div class="card">
+              <h3 class="section-title">Difficulty Level</h3>
+              <div class="difficulty-bars">
+                <div class="difficulty-item">
+                  <div class="difficulty-label">
+                    <span>Overall</span>
+                    <span>${typeof cls.difficulty === 'number' ? cls.difficulty : 50}%</span>
+                  </div>
+                  <div class="progress-bar">
+                    <div class="progress-fill" style="width:${typeof cls.difficulty === 'number' ? cls.difficulty : 50}%"></div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Weekly Schedule -->
+            <div class="card">
+              <h3 class="section-title">Weekly Schedule</h3>
+              <div class="weekly-schedule">
+                ${cls.schedule.map(s => `
+                  <div class="weekly-item">
+                    <div class="weekly-day">${s.day}</div>
+                    <div class="weekly-time">${s.time}</div>
+                    <div class="weekly-spots">${s.spots > 0 ? s.spots + ' spots' : 'Full'}</div>
+                    <button class="btn btn-sm ${s.spots > 0 ? 'btn-outline' : 'btn-ghost'}" 
+                            ${s.spots === 0 ? 'disabled' : ''} 
+                            onclick="showToast('Booked for ${s.day}!', 'success')">
+                      ${s.spots > 0 ? 'Book' : 'Waitlist'}
+                    </button>
+                  </div>
+                `).join('')}
+              </div>
+            </div>
+          </div>
+
+          <!-- Booking Sidebar -->
+          <div class="detail-sidebar">
+            <div class="booking-card">
+              <h3>Book This Class</h3>
+              <div class="booking-details">
+                <div class="booking-detail-item">
+                  <span class="booking-detail-label">${Icons.users} Spots Available</span>
+                  <span class="booking-detail-value">${cls.spots} of ${cls.spots + 18}</span>
+                </div>
+                <div class="booking-detail-item">
+                  <span class="booking-detail-label">${Icons.clock} Next Session</span>
+                  <span class="booking-detail-value">Today, ${cls.time}</span>
+                </div>
+                <div class="booking-detail-item">
+                  <span class="booking-detail-label">${Icons.fire} Duration</span>
+                  <span class="booking-detail-value">${cls.duration} min</span>
+                </div>
+                <div class="booking-detail-item">
+                  <span class="booking-detail-label">${Icons.mapPin} Location</span>
+                  <span class="booking-detail-value">${cls.location}</span>
+                </div>
+              </div>
+              <button class="btn btn-primary btn-lg" id="bookBtn" onclick="bookThisClass()" ${isBooked ? 'disabled' : ''}>
+                ${isBooked ? 'Booked ✓' : 'Book Now'}
+              </button>
+              <p class="booking-note">Free cancellation up to 2 hours before class</p>
+            </div>
+          </div>
+        </div>
+      `;
+
+      // Set fav button state
+      if (isFav) {
+        document.getElementById('favBtn').classList.add('active');
+      }
+
+      initSidebar();
+      ThemeManager.updateToggleUI(ThemeManager.get());
+    }
+
+    renderClassDetail();
+  </script>
+</body>
+</html>

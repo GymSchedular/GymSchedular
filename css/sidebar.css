@@ -1,0 +1,461 @@
+/* ========================================
+   GymSchedular - Sidebar Styles
+   ======================================== */
+
+.sidebar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: var(--sidebar-width);
+  height: 100vh;
+  background: var(--sidebar-bg);
+  display: flex;
+  flex-direction: column;
+  z-index: var(--z-sidebar);
+  transition: width var(--transition-base);
+  overflow: hidden;
+}
+
+.sidebar.collapsed {
+  width: var(--sidebar-collapsed-width);
+}
+
+.sidebar-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: var(--space-6) var(--space-5);
+  min-height: 80px;
+}
+
+.sidebar-brand {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+}
+
+.sidebar-logo {
+  width: 40px;
+  height: 40px;
+  border-radius: var(--radius-lg);
+  background: var(--sidebar-logo-bg);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.sidebar-logo svg {
+  width: 22px;
+  height: 22px;
+  color: var(--brand-primary);
+}
+
+.sidebar-brand-text {
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+.sidebar-brand-name {
+  font-size: var(--font-size-md);
+  font-weight: 700;
+  color: #ffffff;
+  white-space: nowrap;
+}
+
+.sidebar-brand-tagline {
+  font-size: var(--font-size-xs);
+  color: var(--sidebar-text);
+  white-space: nowrap;
+}
+
+.sidebar-close {
+  width: 28px;
+  height: 28px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: var(--radius-sm);
+  color: var(--sidebar-text);
+  cursor: pointer;
+  transition: all var(--transition-fast);
+}
+
+.sidebar-close:hover {
+  background: var(--sidebar-hover-bg);
+  color: #ffffff;
+}
+
+.sidebar.collapsed .sidebar-brand-text,
+.sidebar.collapsed .sidebar-close {
+  display: none;
+}
+
+.sidebar-nav {
+  flex: 1;
+  padding: var(--space-2) var(--space-3);
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+}
+
+.sidebar-nav::-webkit-scrollbar {
+  width: 4px;
+}
+
+.nav-item {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  padding: 0.625rem var(--space-4);
+  border-radius: var(--radius-lg);
+  color: var(--sidebar-text);
+  cursor: pointer;
+  transition: all var(--transition-fast);
+  position: relative;
+  text-decoration: none;
+  white-space: nowrap;
+}
+
+.nav-item:hover {
+  background: var(--sidebar-hover-bg);
+  color: var(--sidebar-text-active);
+}
+
+.nav-item.active {
+  background: var(--sidebar-active-bg);
+  color: var(--sidebar-text-active);
+}
+
+.nav-item.active::after {
+  content: '';
+  position: absolute;
+  right: var(--space-3);
+  width: 6px;
+  height: 6px;
+  border-radius: var(--radius-full);
+  background: var(--brand-primary);
+}
+
+.nav-item-icon {
+  width: 20px;
+  height: 20px;
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.nav-item-icon svg {
+  width: 20px;
+  height: 20px;
+}
+
+.nav-item-text {
+  font-size: var(--font-size-base);
+  font-weight: 500;
+}
+
+.nav-item-subtitle {
+  font-size: var(--font-size-xs);
+  color: var(--sidebar-text);
+  opacity: 0.7;
+}
+
+.nav-item-content {
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+.sidebar.collapsed .nav-item {
+  justify-content: center;
+  padding: 0.75rem;
+}
+
+.sidebar.collapsed .nav-item-text,
+.sidebar.collapsed .nav-item-subtitle,
+.sidebar.collapsed .nav-item.active::after {
+  display: none;
+}
+
+.sidebar-footer {
+  padding: var(--space-5);
+  border-top: 1px solid var(--sidebar-border);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-3);
+}
+
+.sidebar-user {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-2);
+  text-align: center;
+}
+
+.sidebar-user-name {
+  font-size: var(--font-size-sm);
+  font-weight: 600;
+  color: #ffffff;
+  white-space: nowrap;
+}
+
+.sidebar-user-role {
+  font-size: var(--font-size-xs);
+  color: var(--sidebar-text);
+  white-space: nowrap;
+}
+
+.sidebar-user-avatar {
+  width: 44px;
+  height: 44px;
+  border-radius: var(--radius-full);
+  background: var(--brand-primary);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 700;
+  color: #ffffff;
+  font-size: var(--font-size-md);
+}
+
+.sidebar-signout {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  color: var(--sidebar-text);
+  font-size: var(--font-size-sm);
+  cursor: pointer;
+  padding: var(--space-2) var(--space-3);
+  border-radius: var(--radius-md);
+  transition: all var(--transition-fast);
+  white-space: nowrap;
+}
+
+.sidebar-signout:hover {
+  color: #ffffff;
+  background: var(--sidebar-hover-bg);
+}
+
+.sidebar-signout svg {
+  width: 18px;
+  height: 18px;
+}
+
+.sidebar.collapsed .sidebar-user-name,
+.sidebar.collapsed .sidebar-user-role,
+.sidebar.collapsed .sidebar-signout span {
+  display: none;
+}
+
+/* ===== Main Content Area ===== */
+.app-layout {
+  display: flex;
+  min-height: 100vh;
+}
+
+.main-content {
+  margin-left: var(--sidebar-width);
+  flex: 1;
+  padding: var(--space-8);
+  transition: margin-left var(--transition-base);
+  min-height: 100vh;
+}
+
+.sidebar.collapsed ~ .main-content,
+.main-content.sidebar-collapsed {
+  margin-left: var(--sidebar-collapsed-width);
+}
+
+/* Mobile: hide sidebar, show bottom tabs + mobile header */
+@media (max-width: 768px) {
+  .sidebar {
+    display: none !important;
+  }
+
+  .main-content {
+    margin-left: 0 !important;
+  }
+
+  .mobile-header {
+    display: flex !important;
+  }
+}
+
+/* Mobile header (hamburger) */
+.mobile-header {
+  display: none;
+  align-items: center;
+  justify-content: space-between;
+  padding: var(--space-4);
+  background: var(--bg-card);
+  border-bottom: 1px solid var(--border-color);
+  position: sticky;
+  top: 0;
+  z-index: calc(var(--z-sidebar) - 2);
+}
+
+.mobile-hamburger {
+  width: 40px;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: var(--radius-md);
+  cursor: pointer;
+  color: var(--text-primary);
+}
+
+.mobile-hamburger:hover {
+  background: var(--bg-input);
+}
+
+.mobile-hamburger svg {
+  width: 24px;
+  height: 24px;
+}
+
+.mobile-logo {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+}
+
+.mobile-logo-icon {
+  width: 32px;
+  height: 32px;
+  border-radius: var(--radius-md);
+  background: var(--brand-primary-light);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.mobile-logo-icon svg {
+  width: 18px;
+  height: 18px;
+  color: var(--brand-primary);
+}
+
+.mobile-logo-text {
+  font-weight: 700;
+  font-size: var(--font-size-md);
+}
+
+/* ===== Bottom Tabs - iOS 26 Liquid Glass ===== */
+.bottom-tabs {
+  display: none;
+}
+
+@media (max-width: 768px) {
+  .bottom-tabs {
+    display: block;
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    z-index: calc(var(--z-sidebar) + 1);
+    padding: 0 var(--space-3) var(--space-4);
+    pointer-events: none;
+  }
+
+  .bottom-tabs-glass {
+    display: flex;
+    align-items: center;
+    justify-content: space-around;
+    padding: var(--space-2) var(--space-2);
+    border-radius: 28px;
+    pointer-events: auto;
+    /* Liquid glass effect */
+    background: rgba(255, 255, 255, 0.08);
+    -webkit-backdrop-filter: blur(40px) saturate(180%);
+    backdrop-filter: blur(40px) saturate(180%);
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    box-shadow:
+      0 8px 32px rgba(0, 0, 0, 0.3),
+      inset 0 1px 0 rgba(255, 255, 255, 0.1),
+      inset 0 -1px 0 rgba(0, 0, 0, 0.1);
+  }
+
+  [data-theme="light"] .bottom-tabs-glass {
+    background: rgba(255, 255, 255, 0.55);
+    border: 1px solid rgba(255, 255, 255, 0.5);
+    box-shadow:
+      0 8px 32px rgba(0, 0, 0, 0.08),
+      inset 0 1px 0 rgba(255, 255, 255, 0.6),
+      inset 0 -1px 0 rgba(0, 0, 0, 0.03);
+  }
+
+  .bottom-tab {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 2px;
+    padding: var(--space-2) var(--space-3);
+    border-radius: 20px;
+    color: rgba(255, 255, 255, 0.45);
+    text-decoration: none;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    position: relative;
+    min-width: 52px;
+  }
+
+  [data-theme="light"] .bottom-tab {
+    color: rgba(0, 0, 0, 0.35);
+  }
+
+  .bottom-tab-icon {
+    width: 22px;
+    height: 22px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+
+  .bottom-tab-icon svg {
+    width: 22px;
+    height: 22px;
+  }
+
+  .bottom-tab-label {
+    font-size: 10px;
+    font-weight: 500;
+    letter-spacing: 0.02em;
+    white-space: nowrap;
+  }
+
+  .bottom-tab.active {
+    color: #dc3545 !important;
+    background: none !important;
+    border: none !important;
+    font-weight: 700;
+  }
+
+  [data-theme="light"] .bottom-tab.active {
+    background: rgba(220, 53, 69, 0.1);
+  }
+
+  .bottom-tab.active .bottom-tab-icon {
+    transform: scale(1.1);
+  }
+
+  .bottom-tab:active {
+    transform: scale(0.92);
+  }
+
+  /* Add bottom padding to main content to prevent overlap with tabs */
+  .main-content {
+    padding-bottom: 100px !important;
+  }
+
+  /* Hide the hamburger button on mobile (bottom tabs replace sidebar) */
+  .mobile-hamburger {
+    display: none;
+  }
+}

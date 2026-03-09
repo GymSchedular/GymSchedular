@@ -1,0 +1,246 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>GymSchedular - Profile</title>
+  <link rel="stylesheet" href="../css/variables.css">
+  <link rel="stylesheet" href="../css/base.css">
+  <link rel="stylesheet" href="../css/components.css">
+  <link rel="stylesheet" href="../css/sidebar.css">
+  <link rel="stylesheet" href="../css/profile.css">
+  <link rel="stylesheet" href="../css/responsive.css">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%23dc3545'><path d='M20.57 14.86L22 13.43 20.57 12 17 15.57 8.43 7 12 3.43 10.57 2 9.14 3.43 7.71 2 5.57 4.14 4.14 2.71 2.71 4.14l1.43 1.43L2 7.71l1.43 1.43L2 10.57 3.43 12 7 8.43 15.57 17 12 20.57 13.43 22l1.43-1.43L16.29 22l2.14-2.14 1.43 1.43 1.43-1.43-1.43-1.43L22 16.29z'/></svg>">
+</head>
+<body>
+  <div class="app-layout" id="app">
+    <main class="main-content" id="mainContent"></main>
+  </div>
+
+  <script src="../js/utils/storage.js"></script>
+  <script src="../js/utils/theme.js"></script>
+  <script src="../js/utils/icons.js"></script>
+  <script src="../js/utils/data.js"></script>
+  <script src="../js/components/sidebar.js"></script>
+  <script src="../js/components/toast.js"></script>
+  <script>
+    if (!UserManager.isLoggedIn()) {
+      window.location.href = 'login.html';
+    }
+
+    const user = UserManager.getCurrentUser();
+
+    function renderProfile() {
+      const app = document.getElementById('app');
+      const mainContent = document.getElementById('mainContent');
+
+      const mobileHeaderHTML = createMobileHeader();
+      mainContent.insertAdjacentHTML('beforebegin', mobileHeaderHTML);
+      app.insertAdjacentHTML('afterbegin', createSidebar(''));
+
+      const initials = user ? user.name.split(' ').map(n => n[0]).join('') : 'U';
+      const memberSince = user && user.createdAt ? new Date(user.createdAt).toLocaleDateString('en-US', { year: 'numeric', month: 'long' }) : 'N/A';
+
+      mainContent.innerHTML = `
+        <div class="profile-header fade-in">
+          <div>
+            <h1>My Profile</h1>
+            <p class="profile-subtitle">Manage your account settings</p>
+          </div>
+        </div>
+
+        <div class="profile-grid">
+          <!-- Profile Card -->
+          <div class="profile-card card fade-in">
+            <div class="profile-card-top">
+              <div class="profile-avatar-wrapper" onclick="document.getElementById('photoInput').click()">
+                <div class="profile-avatar-large" id="profileAvatar">
+                  ${user && user.profilePhoto ? `<img src="${user.profilePhoto}" alt="Profile" class="profile-avatar-img">` : initials}
+                </div>
+                <div class="profile-avatar-overlay">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/><circle cx="12" cy="13" r="4"/></svg>
+                </div>
+                <input type="file" id="photoInput" accept="image/*" style="display:none" onchange="handlePhotoUpload(event)">
+              </div>
+              <h2 class="profile-name">${user ? user.name : 'User'}</h2>
+              <p class="profile-email">${user ? user.email : ''}</p>
+              <span class="premium-badge">
+                ${Icons.crown} ${user ? user.plan : 'Premium'} Member
+              </span>
+            </div>
+            <div class="profile-card-stats">
+              <div class="profile-stat-item">
+                <strong>${user && user.stats ? user.stats.totalClasses : 47}</strong>
+                <span>Classes</span>
+              </div>
+              <div class="profile-stat-item">
+                <strong>${user && user.stats ? user.stats.streak : 12}</strong>
+                <span>Day Streak</span>
+              </div>
+              <div class="profile-stat-item">
+                <strong>${memberSince}</strong>
+                <span>Member Since</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Edit Form -->
+          <div class="profile-form-section">
+            <div class="card fade-in">
+              <h3 class="section-title">Personal Information</h3>
+              <form id="profileForm" onsubmit="handleProfileUpdate(event)">
+                <div class="profile-form-grid">
+                  <div class="form-group">
+                    <label class="form-label" for="profileName">Full Name</label>
+                    <input type="text" class="form-input" id="profileName" value="${user ? user.name : ''}" required>
+                  </div>
+                  <div class="form-group">
+                    <label class="form-label" for="profileEmail">Email</label>
+                    <input type="email" class="form-input" id="profileEmail" value="${user ? user.email : ''}" required>
+                  </div>
+                </div>
+                <button type="submit" class="btn btn-primary" style="margin-top:var(--space-4);">Save Changes</button>
+              </form>
+            </div>
+
+            <div class="card fade-in">
+              <h3 class="section-title">Change Password</h3>
+              <form id="passwordForm" onsubmit="handlePasswordChange(event)">
+                <div class="profile-form-grid">
+                  <div class="form-group">
+                    <label class="form-label" for="currentPassword">Current Password</label>
+                    <input type="password" class="form-input" id="currentPassword" placeholder="Enter current password" required>
+                  </div>
+                  <div class="form-group">
+                    <label class="form-label" for="newPassword">New Password</label>
+                    <input type="password" class="form-input" id="newPassword" placeholder="Min 8 characters" required minlength="8">
+                  </div>
+                </div>
+                <button type="submit" class="btn btn-outline" style="margin-top:var(--space-4);">Update Password</button>
+              </form>
+            </div>
+
+            <div class="card fade-in">
+              <h3 class="section-title">Preferences</h3>
+              <div class="preferences-list">
+                <div class="preference-item">
+                  <div>
+                    <strong>Dark Mode</strong>
+                    <p>Toggle between light and dark themes</p>
+                  </div>
+                  ${ThemeManager.createToggleButton()}
+                </div>
+                <div class="preference-item">
+                  <div>
+                    <strong>Email Notifications</strong>
+                    <p>Receive booking confirmations and reminders</p>
+                  </div>
+                  <label class="toggle-switch">
+                    <input type="checkbox" checked>
+                    <span class="toggle-slider"></span>
+                  </label>
+                </div>
+              </div>
+            </div>
+
+            <div class="card fade-in" style="border-color:rgba(239,68,68,0.3);">
+              <h3 class="section-title" style="color:var(--danger);">Danger Zone</h3>
+              <p style="color:var(--text-secondary);font-size:var(--font-size-sm);margin-bottom:var(--space-4);">Once you sign out, you'll need to log in again.</p>
+              <button class="btn btn-outline" style="border-color:var(--danger);color:var(--danger);" onclick="handleSignOut()">Sign Out</button>
+            </div>
+          </div>
+        </div>
+      `;
+
+      initSidebar();
+      ThemeManager.updateToggleUI(ThemeManager.get());
+    }
+
+    function handleProfileUpdate(e) {
+      e.preventDefault();
+      const name = document.getElementById('profileName').value.trim();
+      const email = document.getElementById('profileEmail').value.trim();
+
+      if (!name || !email) return;
+
+      const updatedUser = { ...user, name, email };
+      UserManager.setCurrentUser(updatedUser);
+
+      // Also update in users list
+      const users = UserManager.getUsers();
+      const idx = users.findIndex(u => u.id === user.id);
+      if (idx > -1) {
+        users[idx] = { ...users[idx], name, email };
+        Storage.set('users', users);
+      }
+
+      showToast('Profile updated successfully!', 'success');
+      setTimeout(() => location.reload(), 600);
+    }
+
+    function handlePasswordChange(e) {
+      e.preventDefault();
+      const current = document.getElementById('currentPassword').value;
+      const newPass = document.getElementById('newPassword').value;
+
+      if (user.password !== current) {
+        showToast('Current password is incorrect', 'error');
+        return;
+      }
+
+      const updatedUser = { ...user, password: newPass };
+      UserManager.setCurrentUser(updatedUser);
+
+      const users = UserManager.getUsers();
+      const idx = users.findIndex(u => u.id === user.id);
+      if (idx > -1) {
+        users[idx] = { ...users[idx], password: newPass };
+        Storage.set('users', users);
+      }
+
+      showToast('Password updated!', 'success');
+      document.getElementById('passwordForm').reset();
+    }
+
+    function handlePhotoUpload(e) {
+      const file = e.target.files[0];
+      if (!file) return;
+
+      if (!file.type.startsWith('image/')) {
+        showToast('Please select an image file', 'error');
+        return;
+      }
+
+      if (file.size > 2 * 1024 * 1024) {
+        showToast('Image must be under 2MB', 'error');
+        return;
+      }
+
+      const reader = new FileReader();
+      reader.onload = function(ev) {
+        const dataUrl = ev.target.result;
+
+        // Update avatar preview
+        const avatar = document.getElementById('profileAvatar');
+        avatar.innerHTML = `<img src="${dataUrl}" alt="Profile" class="profile-avatar-img">`;
+
+        // Save to user
+        const updatedUser = { ...user, profilePhoto: dataUrl };
+        UserManager.setCurrentUser(updatedUser);
+
+        const users = UserManager.getUsers();
+        const idx = users.findIndex(u => u.id === user.id);
+        if (idx > -1) {
+          users[idx] = { ...users[idx], profilePhoto: dataUrl };
+          Storage.set('users', users);
+        }
+
+        showToast('Profile photo updated!', 'success');
+      };
+      reader.readAsDataURL(file);
+    }
+
+    renderProfile();
+  </script>
+</body>
+</html>

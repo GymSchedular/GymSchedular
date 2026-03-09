@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>GymSchedular - Live Classes</title>
+  <link rel="stylesheet" href="../css/variables.css">
+  <link rel="stylesheet" href="../css/base.css">
+  <link rel="stylesheet" href="../css/components.css">
+  <link rel="stylesheet" href="../css/sidebar.css">
+  <link rel="stylesheet" href="../css/live-classes.css">
+  <link rel="stylesheet" href="../css/responsive.css">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%23dc3545'><path d='M20.57 14.86L22 13.43 20.57 12 17 15.57 8.43 7 12 3.43 10.57 2 9.14 3.43 7.71 2 5.57 4.14 4.14 2.71 2.71 4.14l1.43 1.43L2 7.71l1.43 1.43L2 10.57 3.43 12 7 8.43 15.57 17 12 20.57 13.43 22l1.43-1.43L16.29 22l2.14-2.14 1.43 1.43 1.43-1.43-1.43-1.43L22 16.29z'/></svg>">
+</head>
+<body>
+  <div class="app-layout" id="app">
+    <main class="main-content" id="mainContent"></main>
+  </div>
+
+  <script src="../js/utils/storage.js"></script>
+  <script src="../js/utils/theme.js"></script>
+  <script src="../js/utils/icons.js"></script>
+  <script src="../js/utils/data.js"></script>
+  <script src="../js/components/sidebar.js"></script>
+  <script src="../js/components/toast.js"></script>
+
+  <script>
+    if (!UserManager.isLoggedIn()) {
+      window.location.href = 'login.html';
+    }
+
+    const liveNow = [
+      {
+        name: 'Morning Yoga Flow',
+        instructor: 'Sarah Chen',
+        viewers: 18,
+        maxViewers: 25,
+        duration: '60 min',
+        category: 'yoga',
+        started: '15 min ago',
+        image: 'https://images.unsplash.com/photo-1544367567-0f2fcb009e0b?w=500&h=300&fit=crop'
+      },
+      {
+        name: 'HIIT Power Hour',
+        instructor: 'Marcus Johnson',
+        viewers: 22,
+        maxViewers: 30,
+        duration: '45 min',
+        category: 'hiit',
+        started: '8 min ago',
+        image: 'https://images.unsplash.com/photo-1534258936925-c58bed479fcb?w=500&h=300&fit=crop'
+      }
+    ];
+
+    const comingUp = [
+      { name: 'Pilates Core Sculpt', instructor: 'Emma Wilson', time: '11:00 AM', spots: 15, category: 'pilates' },
+      { name: 'Boxing Cardio Blast', instructor: 'Jake Torres', time: '2:00 PM', spots: 8, category: 'boxing' },
+      { name: 'Power Strength', instructor: 'Emma Wilson', time: '4:00 PM', spots: 12, category: 'strength' },
+      { name: 'Evening Yoga', instructor: 'Sarah Chen', time: '7:00 PM', spots: 20, category: 'yoga' }
+    ];
+
+    function joinLive(name) {
+      showToast(`Joining ${name}... Connecting to live stream`, 'success');
+    }
+
+    function setReminder(name) {
+      showToast(`Reminder set for ${name}!`, 'success');
+    }
+
+    function renderLiveClasses() {
+      const app = document.getElementById('app');
+      const mainContent = document.getElementById('mainContent');
+
+      const mobileHeaderHTML = createMobileHeader();
+      mainContent.insertAdjacentHTML('beforebegin', mobileHeaderHTML);
+      app.insertAdjacentHTML('afterbegin', createSidebar('live-classes'));
+
+      mainContent.innerHTML = `
+        <div class="live-header fade-in">
+          <div>
+            <h1>Live Classes</h1>
+            <p class="live-subtitle">Join real-time sessions with our instructors</p>
+          </div>
+        </div>
+
+        <!-- Live Now Section -->
+        <div class="happening-now fade-in">
+          <div class="happening-now-title">
+            Happening Now
+            <span class="live-now-badge">${liveNow.length} live</span>
+          </div>
+          <div class="live-cards-grid">
+            ${liveNow.map((cls, i) => `
+              <div class="live-card animate-slide-up" style="animation-delay:${0.1 * (i + 1)}s" onclick="joinLive('${cls.name}')">
+                <img src="${cls.image}" alt="${cls.name}" loading="lazy">
+                <div class="live-card-overlay">
+                  <div class="live-card-top">
+                    <div class="live-badge">
+                      LIVE
+                    </div>
+                    <div class="live-card-viewers">${Icons.users} ${cls.viewers}/${cls.maxViewers}</div>
+                  </div>
+                  <div class="live-card-bottom">
+                    <div class="live-card-title">${cls.name}</div>
+                    <div class="live-card-meta">${cls.instructor} · Started ${cls.started}</div>
+                  </div>
+                </div>
+              </div>
+            `).join('')}
+          </div>
+        </div>
+
+        <!-- Coming Up Section -->
+        <div class="coming-up fade-in">
+          <div class="coming-up-header">
+            <div class="coming-up-title">${Icons.clock} Coming Up Today</div>
+          </div>
+          <div class="coming-up-list">
+            ${comingUp.map((cls, i) => `
+              <div class="coming-up-item animate-slide-up" style="animation-delay:${0.05 * (i + 1)}s">
+                <div class="coming-up-time">
+                  <div class="time">${cls.time.split(' ')[0]}</div>
+                  <div class="period">${cls.time.split(' ')[1]}</div>
+                </div>
+                <div class="coming-up-divider"></div>
+                <div class="coming-up-info">
+                  <h4>${cls.name}</h4>
+                  <div class="coming-up-meta">
+                    <span>${Icons.user} ${cls.instructor}</span>
+                    <span class="badge badge-${cls.category} badge-sm">${cls.category.charAt(0).toUpperCase() + cls.category.slice(1)}</span>
+                  </div>
+                </div>
+                <div class="coming-up-right">
+                  <span class="coming-up-spots">${cls.spots} spots left</span>
+                  <button class="btn btn-primary btn-sm" onclick="window.location.href='book-class.html'">
+                    Book
+                  </button>
+                </div>
+              </div>
+            `).join('')}
+          </div>
+        </div>
+
+        <!-- Pro Tip -->
+        <div class="pro-tip fade-in">
+          <div class="pro-tip-icon">${Icons.zap}</div>
+          <div class="pro-tip-content">
+            <h4>Pro Tip</h4>
+            <p>Join live classes 5 minutes early to test your connection and get settled. Premium members get priority access to all live sessions!</p>
+          </div>
+        </div>
+      `;
+
+      initSidebar();
+      ThemeManager.updateToggleUI(ThemeManager.get());
+    }
+
+    renderLiveClasses();
+  </script>
+</body>
+</html>
