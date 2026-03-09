@@ -570,14 +570,22 @@
   .landing-hero h1 {
     font-size: 1.75rem;
   }
+   .sign-btn {
+    display: none;
+  }
+
+  .landing-hero-desc{
+     font-size: small;
+  }
 
   .landing-hero-actions {
-    flex-direction: column;
+    flex-direction: row;
     align-items: center;
   }
 
   .landing-hero-stats {
-    flex-direction: column;
-    gap: var(--space-4);
+    display: grid;
+    grid-template-columns: repeat(2,1fr);
+    column-gap: 2px;
   }
 }

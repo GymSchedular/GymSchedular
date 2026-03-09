@@ -76,8 +76,11 @@
   left: 0;
   right: 0;
   padding: var(--space-4) var(--space-5);
-  background: linear-gradient(to top, rgba(0,0,0,0.8), transparent);
+  background: linear-gradient(to top, rgba(0,0,0,0.8) 80%, transparent);
   color: #ffffff;
+  & > p{
+    font-size: small;
+  }
 }
 
 .space-card-name {
@@ -200,7 +203,7 @@
 
 .amenities-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax((100%,120px),1fr));
+  grid-template-columns: repeat(auto-fill, minmax(120px,1fr));
   gap: var(--space-4);
   margin-top: var(--space-4);
 }

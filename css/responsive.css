@@ -231,6 +231,7 @@
 
 /* Small Mobile: up to 480px */
 @media (max-width: 480px) {
+ 
   .stats-grid {
     grid-template-columns: 1fr 1fr;
     gap: var(--space-2);

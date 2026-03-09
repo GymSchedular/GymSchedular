@@ -254,8 +254,7 @@
 }
 
 /* ===== Main Content Area ===== */
-.app-layout {
-  display: flex;
+.app-layout{
   min-height: 100vh;
 }
 
