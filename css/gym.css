@@ -150,7 +150,7 @@
 /* Gym Stats */
 .gym-stats {
   display: grid;
-  grid-template-columns: repeat(4, 1fr);
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
   gap: var(--space-4);
   margin-bottom: var(--space-8);
 }
@@ -200,7 +200,7 @@
 
 .amenities-grid {
   display: grid;
-  grid-template-columns: repeat(4, 1fr);
+  grid-template-columns: repeat(auto-fill, minmax((100%,120px),1fr));
   gap: var(--space-4);
   margin-top: var(--space-4);
 }

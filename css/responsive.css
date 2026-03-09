@@ -71,9 +71,10 @@
   }
 
   .dashboard-header {
-    flex-direction: column;
+    flex-direction: row;
+
     gap: var(--space-3);
-    align-items: flex-start;
+    align-items: center;
   }
 
   .dashboard-grid {
